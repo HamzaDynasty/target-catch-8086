@@ -94,21 +94,152 @@ END
 
 ----------- MUHAMMAD WAQAR -------------------
 
+.MODEL SMALL
 
+.DATA
 
+EXTRN targetX:BYTE
+EXTRN targetY:BYTE
+EXTRN playerX:BYTE
+EXTRN playerY:BYTE
+EXTRN score:BYTE
 
+.CODE
 
+EXTRN SET_CURSOR:PROC
+EXTRN SHOW_GAME_OVER:PROC
 
+PUBLIC MOVE_TARGET
+PUBLIC CHECK_COLLISION
+PUBLIC DRAW_TARGET
+PUBLIC ERASE_TARGET
+PUBLIC DRAW_SCORE
+PUBLIC RANDOM_X
 
+MOVE_TARGET PROC
 
+    ADD targetY,2
 
+    CMP targetY,24
+    JGE TARGET_FAIL
 
+    RET
 
+TARGET_FAIL:
 
+    JMP SHOW_GAME_OVER
 
+MOVE_TARGET ENDP
 
+CHECK_COLLISION PROC
 
+    MOV AL,targetY
+    CMP AL,playerY
+    JNE NO_COLLISION
 
+    MOV AL,targetX
+    MOV BL,playerX
 
+    DEC BL
+
+    CMP AL,BL
+    JL NO_COLLISION
+
+    ADD BL,2
+
+    CMP AL,BL
+    JG NO_COLLISION
+
+    INC score
+
+    MOV targetY,4
+
+    CALL RANDOM_X
+
+NO_COLLISION:
+
+    RET
+
+CHECK_COLLISION ENDP
+
+DRAW_TARGET PROC
+
+    MOV DH,targetY
+    MOV DL,targetX
+
+    CALL SET_CURSOR
+
+    MOV AH,09h
+    MOV AL,254
+    MOV BH,00h
+    MOV BL,0Ch
+    MOV CX,1
+
+    INT 10h
+
+    RET
+
+DRAW_TARGET ENDP
+
+ERASE_TARGET PROC
+
+    MOV DH,targetY
+    MOV DL,targetX
+
+    CALL SET_CURSOR
+
+    MOV DL,' '
+    MOV AH,02h
+
+    INT 21h
+
+    RET
+
+ERASE_TARGET ENDP
+
+DRAW_SCORE PROC
+
+    MOV DH,1
+    MOV DL,18
+
+    CALL SET_CURSOR
+
+    XOR AX,AX
+    MOV AL,score
+
+    ADD AL,'0'
+
+    MOV AH,09h
+    MOV BH,00h
+    MOV BL,0Ah
+    MOV CX,1
+
+    INT 10h
+
+    RET
+
+DRAW_SCORE ENDP
+
+RANDOM_X PROC
+
+    MOV AH,00h
+    INT 1Ah
+
+    MOV AX,DX
+
+    XOR DX,DX
+
+    MOV CX,74
+    DIV CX
+
+    ADD DL,3
+
+    MOV targetX,DL
+
+    RET
+
+RANDOM_X ENDP
+
+END
 ----------- ABDUL MUNAM -----------------------
     
