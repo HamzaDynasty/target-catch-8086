@@ -242,4 +242,146 @@ RANDOM_X ENDP
 
 END
 ----------- ABDUL MUNAM -----------------------
-    
+
+
+.MODEL SMALL
+
+.DATA
+
+EXTRN playerX:BYTE
+EXTRN playerY:BYTE
+
+.CODE
+
+PUBLIC DRAW_PLAYER
+PUBLIC ERASE_PLAYER
+PUBLIC DRAW_HUD
+PUBLIC DRAW_BORDER
+PUBLIC SET_CURSOR
+PUBLIC CLEAR_SCREEN
+
+DRAW_PLAYER PROC
+
+    MOV DH,playerY
+    MOV DL,playerX
+
+    DEC DL
+
+    CALL SET_CURSOR
+
+    MOV AH,09h
+    MOV AL,223
+    MOV BH,00h
+    MOV BL,0Bh
+    MOV CX,3
+
+    INT 10h
+
+    RET
+
+DRAW_PLAYER ENDP
+
+ERASE_PLAYER PROC
+
+    MOV DH,playerY
+    MOV DL,playerX
+
+    DEC DL
+
+    CALL SET_CURSOR
+
+    MOV AH,09h
+    MOV AL,' '
+    MOV BH,00h
+    MOV BL,07h
+    MOV CX,3
+
+    INT 10h
+
+    RET
+
+ERASE_PLAYER ENDP
+
+DRAW_HUD PROC
+
+    MOV DH,0
+    MOV DL,0
+
+    CALL SET_CURSOR
+
+    MOV AH,09h
+    MOV AL,205
+    MOV BH,00h
+    MOV BL,0Fh
+    MOV CX,80
+
+    INT 10h
+
+    RET
+
+DRAW_HUD ENDP
+
+DRAW_BORDER PROC
+
+    MOV CX,21
+    MOV DH,3
+
+BORDER_LOOP:
+
+    MOV DL,0
+    CALL SET_CURSOR
+
+    MOV AH,09h
+    MOV AL,178
+    MOV BH,00h
+    MOV BL,08h
+    PUSH CX
+    MOV CX,1
+    INT 10h
+    POP CX
+
+    MOV DL,79
+    CALL SET_CURSOR
+
+    MOV AH,09h
+    MOV AL,178
+    MOV BH,00h
+    MOV BL,08h
+    PUSH CX
+    MOV CX,1
+    INT 10h
+    POP CX
+
+    INC DH
+
+    LOOP BORDER_LOOP
+
+    RET
+
+DRAW_BORDER ENDP
+
+SET_CURSOR PROC
+
+    MOV AH,02h
+    MOV BH,00h
+
+    INT 10h
+
+    RET
+
+SET_CURSOR ENDP
+
+CLEAR_SCREEN PROC
+
+    MOV AX,0600h
+    MOV BH,07h
+    MOV CX,0000h
+    MOV DX,184Fh
+
+    INT 10h
+
+    RET
+
+CLEAR_SCREEN ENDP
+
+END
